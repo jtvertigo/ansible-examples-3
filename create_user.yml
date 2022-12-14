@@ -5,7 +5,18 @@
   gather_facts: false
   become: true
 
+  vars:
+    user_name: modi
+
   tasks:
-    - name: "Creating user"
+    - name: "Creating user {{ user_name }}"
       user:
-        name: sonia
+        name: "{{ user_name }}"
+
+    - name: "Creating a directory for {{ user_name }}"
+      file:
+        path: /opt/{{ user_name }}_temp_dir
+        state: directory
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"
+        mode: 0755

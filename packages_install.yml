@@ -6,12 +6,14 @@
   gather_facts: true
 
   tasks:
-    - name: "Uninstalling packages"
+    - name: "Installing packages"
       dnf:
         name: "{{ item.package }}"
         state: "{{ item.setup }}"
       loop:
         - { package: 'git', setup: 'installed' }
         - { package: 'make', setup: 'installed' }
-        - { package: 'wget', setup: 'removed' }
-        - { package: 'tree', setup: 'absent' }
+        - { package: 'wget', setup: 'installed' }
+        - { package: 'tree', setup: 'installed' }
+        - { package: 'unzip', setup: 'installed' }
+        - { package: 'tar', setup: 'installed' }
