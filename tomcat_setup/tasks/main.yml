@@ -1,0 +1,40 @@
+---
+# tasks file for tomcat_setup
+- name: "Installing Java 1.8*"
+  dnf:
+    name: java-1.8*
+    state: installed
+
+- name: "Downloading TomCat package"
+  get_url:
+    url: "{{ tomcat_url }}"
+    dest: /opt
+    mode: 0755
+
+- name: "Extract TomCat package"
+  unarchive:
+    src: /opt/{{ tomcat_package }}.tar.gz
+    dest: /opt
+    remote_src: yes
+
+- name: "Changing permissions on Apache TomCat files"
+  file:
+    path: /opt/{{ tomcat_package }}
+    mode: 0755
+    recurse: yes
+
+- name: "Creating symlink for TomCat startup"
+  file:
+    src: "/opt/{{ tomcat_package }}/bin/{{ item.tomcat_script }}"
+    dest: "/usr/local/bin/{{ item.tomcat_command }}"
+    state: link
+  loop:
+    - { tomcat_script: 'startup.sh', tomcat_command: 'tomcatup' }
+    - { tomcat_script: 'shutdown.sh', tomcat_command: 'tomcatdown' }
+  notify: "Start TomCat"
+
+- name: "Changing port number"
+  copy:
+    src: ./server.xml
+    dest: /opt/{{ tomcat_package }}/conf/server.xml
+  notify: "Restart TomCat"

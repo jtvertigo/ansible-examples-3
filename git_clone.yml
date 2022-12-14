@@ -1,0 +1,13 @@
+---
+
+- name: "Cloning repo from GitHub"
+  hosts: webservers
+  gather_facts: false
+
+  tasks:
+    - name: "Cloning repo"
+      git:
+        repo: https://github.com/jtvertigo/iperf.git
+        dest: /home/ansadmin/iperf
+        version: master
+        

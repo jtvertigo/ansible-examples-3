@@ -32,13 +32,25 @@
     - name: "Creating symlink for TomCat startup"
       file:
         src: "/opt/{{ tomcat_package }}/bin/{{ item.tomcat_script }}"
-        dest: "/usr/local/bin/{{ item.tomcat_command }}"                       # ? fixme
+        dest: "/usr/local/bin/{{ item.tomcat_command }}"
         state: link
       loop:
-        - { tomcat_script: 'startup.sh', tomcat_command: 'tomcatup ' }
-        - { tomcat_script: 'shutdown.sh', tomcat_command: 'tomcatdown ' }
+        - { tomcat_script: 'startup.sh', tomcat_command: 'tomcatup' }
+        - { tomcat_script: 'shutdown.sh', tomcat_command: 'tomcatdown' }
+      notify: "Start TomCat"
 
-    - name: "Start service"
-      command: nohup ./startup.sh
-      args:
-        chdir: /opt/{{ tomcat_package }}/bin
+    - name: "Changing port number"
+      copy:
+        src: ./server.xml
+        dest: /opt/{{ tomcat_package }}/conf/server.xml
+      notify: "Restart TomCat"
+
+  handlers:
+    - name: "Start TomCat"
+      shell: nohup /usr/local/bin/tomcatup
+      #command: nohup ./startup.sh
+      #args:
+      #  chdir: /opt/{{ tomcat_package }}/bin
+
+    - name: "Restart TomCat"
+      shell: /usr/local/bin/tomcatdown; nohup /usr/local/bin/tomcatup

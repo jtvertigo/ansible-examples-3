@@ -1,0 +1,9 @@
+---
+
+- name: "Tomcat deploying - Playbook"
+  hosts: webservers
+  become: true
+  gather_facts: yes
+
+  roles:
+    - tomcat_setup

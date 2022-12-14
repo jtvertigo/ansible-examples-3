@@ -1,0 +1,11 @@
+---
+# handlers file for tomcat_setup
+
+- name: "Start TomCat"
+  shell: nohup /usr/local/bin/tomcatup
+  #command: nohup ./startup.sh
+  #args:
+  #  chdir: /opt/{{ tomcat_package }}/bin
+
+- name: "Restart TomCat"
+  shell: /usr/local/bin/tomcatdown; nohup /usr/local/bin/tomcatup
