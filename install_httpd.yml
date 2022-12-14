@@ -1,0 +1,39 @@
+---
+
+- name: "Installing packages - Playbook"
+  hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: "Installing httpd on RedHat-like OS"
+      dnf:
+        name: httpd
+        state: installed
+      when: "ansible_os_family == 'RedHat'"
+      notify: "start httpd services"
+    
+    - name: "Installing httpd on Debian-like OS"
+      apt:
+        name: apache2
+        state: present
+      when: "ansible_os_family == 'Debian'"
+      notify: "start apache2 services"
+
+    - name: "Copying index.html"
+      copy:
+        src: /home/ansadmin/ansible-labs/index.html
+        dest: /var/www/html
+
+  handlers:
+    - name: "start httpd services"
+      service:
+        name: httpd
+        state: started
+      when: "ansible_os_family == 'RedHat'"
+
+    - name: "start apache2 services"
+      service:
+        name: apache2
+        state: started
+      when: "ansible_os_family == 'Debian'"

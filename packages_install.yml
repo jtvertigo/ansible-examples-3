@@ -1,0 +1,17 @@
+---
+
+- name: "Install multiple packages - Playbook"
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: "Uninstalling packages"
+      dnf:
+        name: "{{ item.package }}"
+        state: "{{ item.setup }}"
+      loop:
+        - { package: 'git', setup: 'installed' }
+        - { package: 'make', setup: 'installed' }
+        - { package: 'wget', setup: 'removed' }
+        - { package: 'tree', setup: 'absent' }

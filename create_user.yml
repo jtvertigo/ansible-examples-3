@@ -1,0 +1,11 @@
+---
+
+- name: "Creating users - Playbook"
+  hosts: all
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: "Creating user"
+      user:
+        name: sonia

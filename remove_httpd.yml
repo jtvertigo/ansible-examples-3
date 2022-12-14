@@ -1,0 +1,19 @@
+---
+
+- name: "Removing httpd services - Playbook"
+  hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: "Removing httpd services on RHEL-like OS"
+      dnf:
+        name: httpd
+        state: absent
+      when: "ansible_os_family == 'RedHat'"
+
+    - name: "Removing httpd services on Debian-like OS"
+      apt:
+        name: apache2
+        state: absent
+      when: "ansible_os_family == 'Debian'"
