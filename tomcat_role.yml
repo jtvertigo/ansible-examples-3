@@ -1,7 +1,7 @@
 ---
 
 - name: "Tomcat deploying - Playbook"
-  hosts: webservers
+  hosts: tomcat
   become: true
   gather_facts: yes
 

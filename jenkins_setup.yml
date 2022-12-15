@@ -1,0 +1,36 @@
+---
+
+- name: "Installing Jenkins - Playbook"
+  hosts: jenkins
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: "Installing Java 1.8*, wget"
+      dnf:
+        name: "{{ item.package }}"
+        state: "{{ item.state }}"
+      loop:
+        - { package: 'java-1.8*', state: 'installed' }
+        - { package: 'wget', state: 'installed' }
+
+    - name: "Downloading Jenkins repo"
+      get_url:
+        url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+        dest: /etc/yum.repos.d/jenkins.repo
+
+    - name: "Adding Jenkins repo key"
+      rpm_key:
+        state: present
+        key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+    - name: "Installing Jenkins 2.346.1"
+      dnf:
+        name: jenkins-2.346.1-1.1
+        state: installed
+
+    - name: "Start Jenkins"
+      service:
+        name: jenkins
+        state: started
+        enabled: yes
